@@ -3,12 +3,14 @@ import SearchBar from '@/components/search-bar';
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
 import { fetchMovies } from '@/services/api';
+import { updatedSearchCount } from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncTriggered, setDebouncTriggered] = useState(false);
 
   const {
     data: searchMovies = [],
@@ -29,12 +31,25 @@ const Search = () => {
 
   useEffect(() => {
     const timeoutId = setTimeout(async () => {
-      if (searchQuery.trim()) await loadMovies();
-      else reset();
+      if (searchQuery.trim()) {
+        setDebouncTriggered(true);
+        await loadMovies();
+      } else {
+        reset();
+      }
     }, 500);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      setDebouncTriggered(false);
+      clearTimeout(timeoutId);
+    };
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (searchMovies?.length! > 0 && searchMovies?.[0] && debouncTriggered) {
+      updatedSearchCount(searchQuery, searchMovies[0]);
+    }
+  }, [searchMovies, debouncTriggered]);
 
   return (
     <View className="flex-1 bg-primary">

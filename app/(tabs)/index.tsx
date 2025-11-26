@@ -1,21 +1,17 @@
 import MovieCard from '@/components/movie-card';
 import SearchBar from '@/components/search-bar';
+import TrendingMovies from '@/components/trending-movies';
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
 import { fetchMovies } from '@/services/api';
+import { getTradingMovies } from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
 import { useRouter } from 'expo-router';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, Text, View } from 'react-native';
 
 export default function Index() {
   const router = useRouter();
+  const { data: trendingMovies, loading: trendingLoading, error: trendingError } = useFetch(getTradingMovies);
 
   const {
     data: movies,
@@ -41,27 +37,18 @@ export default function Index() {
       >
         <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
 
-        {moviesLoading ? (
-          <ActivityIndicator
-            size="large"
-            color="#0000ff"
-            className="mt-10 self-center"
-          />
-        ) : moviesError ? (
-          <Text className="text-lg text-white font-bold">
-            Error: {moviesError?.message}
-          </Text>
+        {moviesLoading || trendingLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" className="mt-10 self-center" />
+        ) : moviesError || trendingError ? (
+          <Text className="text-lg text-white font-bold">Error: {moviesError?.message || trendingError?.message}</Text>
         ) : (
           <View className="flex-1 mt-5">
-            <SearchBar
-              onPress={() => router.push('/search')}
-              placeholder="Search for a movie"
-            />
+            <SearchBar onPress={() => router.push('/search')} placeholder="Search for a movie" />
+
+            {trendingMovies && <TrendingMovies movies={trendingMovies} />}
 
             <>
-              <Text className="text-lg text-white font-bold mt-5 mb-3">
-                Latest Movies
-              </Text>
+              <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Movies</Text>
 
               <FlatList
                 data={movies}
