@@ -1,4 +1,4 @@
-import { TrendingMovie } from '@/interfaces/movies';
+import { SavedMovies, TrendingMovie } from '@/interfaces/movies';
 import { Client, Databases, ID, Query } from 'react-native-appwrite';
 
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;
@@ -39,6 +39,49 @@ export const getTradingMovies = async (): Promise<TrendingMovie[]> => {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.limit(5), Query.orderDesc('count')]);
 
     return result.documents as unknown as TrendingMovie[];
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getSavedMovies = async (userId: number): Promise<SavedMovies[]> => {
+  try {
+    const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.equal('userId', userId)]);
+
+    return result.documents as unknown as SavedMovies[];
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const saveMovie = async ({ userId, movieId }: { userId: number; movieId: number }) => {
+  try {
+    const existing = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Query.equal('userId', userId),
+      Query.equal('movieId', movieId),
+    ]);
+
+    if (existing.documents.length > 0) {
+      return existing.documents[0] as unknown as SavedMovies;
+    }
+
+    const newSaved = await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
+      userId,
+      movieId,
+    });
+
+    return newSaved as unknown as SavedMovies;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const removeSavedMovie = async (documentId: string) => {
+  try {
+    await database.deleteDocument(DATABASE_ID, COLLECTION_ID, documentId);
   } catch (error) {
     console.log(error);
     throw error;

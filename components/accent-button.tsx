@@ -12,7 +12,7 @@ const AccentButton: FC<Props> = ({ onPress, Icon, label }) => {
   return (
     <TouchableOpacity onPress={onPress} className="absolute bottom-10 left-0 right-0 mx-6 z-50" activeOpacity={0.85}>
       <View className="w-full rounded-xl overflow-hidden">
-        <LinearGradient colors={['#2563eb', '#60A5FA']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
+        <LinearGradient colors={['#155dfc', '#0092b8']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
           <View className="w-full py-3.5 flex-row justify-center items-center gap-x-2">
             {Icon}
             <Text className="text-white font-semibold">{label}</Text>
