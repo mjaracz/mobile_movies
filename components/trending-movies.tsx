@@ -1,3 +1,4 @@
+import { TrendingMovie } from '@/interfaces/movies';
 import React, { FC } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import TrendingCard from './trending-card';

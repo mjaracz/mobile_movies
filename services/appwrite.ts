@@ -1,3 +1,4 @@
+import { TrendingMovie } from '@/interfaces/movies';
 import { Client, Databases, ID, Query } from 'react-native-appwrite';
 
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;

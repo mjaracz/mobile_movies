@@ -1,9 +1,10 @@
+import AccentButton from '@/components/accent-button';
 import { icons } from '@/constants/icons';
 import { fetchMovieDetails } from '@/services/api';
 import useFetch from '@/services/useFetch';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
 
 interface MovieInfoProps {
   label: string;
@@ -62,13 +63,11 @@ const MovieDetails = () => {
         </ScrollView>
       )}
 
-      <TouchableOpacity
+      <AccentButton
         onPress={router.back}
-        className="absolute bottom-10 left-0 right-0 mx-10 bg-secondAccent rounded-lg py-3.5 flex-row justify-center items-center z-50"
-      >
-        <Image source={icons.arrow} className="size-5 mr-1 mt-0.5 rotate-180" tintColor="#fff" />
-        <Text className="text-white font-semibold">Go back</Text>
-      </TouchableOpacity>
+        Icon={<Image source={icons.arrow} className="size-5 mr-1 mt-0.5 rotate-180" tintColor="#fff" />}
+        label="Go back"
+      />
     </View>
   );
 };
