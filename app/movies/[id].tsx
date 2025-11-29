@@ -107,7 +107,13 @@ const MovieDetails = () => {
               <AccentButton
                 fullWidth={false}
                 onPress={handleSave}
-                Icon={<Image source={icons.save} className="size-4 mr-1" />}
+                Icon={
+                  <Image
+                    source={icons.save}
+                    className="size-4 mr-1"
+                    tintColor="white"
+                  />
+                }
                 label={saving ? 'Saving...' : 'Save'}
               />
             </View>

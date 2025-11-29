@@ -1,28 +1,23 @@
-import AccentButton from '@/components/accent-button';
 import { Logo } from '@/components/logo';
 import MovieCard from '@/components/movie-card';
 import { images } from '@/constants/images';
 import { fetchMovieDetails } from '@/services/api';
-import { getSavedMovies, removeSavedMovie } from '@/services/appwrite';
+import { getSavedMovies } from '@/services/appwrite';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  Image,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
 
-import Feather from '@expo/vector-icons/Feather';
+import { RemoveSavedBtn } from '@/components/remove-saved-btn';
+
+interface EnricedMovie {
+  movie: Movie;
+  documentId: string;
+}
 
 const Saved = () => {
-  const [movies, setMovies] = useState<
-    { movie: Movie; documentId: string }[] | null
-  >(null);
+  const [movies, setMovies] = useState<EnricedMovie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error>();
 
   const isFocused = useIsFocused();
 
@@ -78,31 +73,6 @@ const Saved = () => {
     }
   }, [isFocused, loadSaved]);
 
-  const handleRemove = useCallback(
-    (documentId: string) => {
-      Alert.alert('Remove', 'Remove this saved movie?', [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Remove',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await removeSavedMovie(documentId);
-              await loadSaved();
-            } catch (err) {
-              console.log(err);
-              Alert.alert(
-                'Error',
-                err instanceof Error ? err.message : 'Failed to remove'
-              );
-            }
-          },
-        },
-      ]);
-    },
-    [loadSaved]
-  );
-
   return (
     <View className="flex-1 bg-primary">
       <Image source={images.bg} className="absolute w-full z-0" />
@@ -113,13 +83,9 @@ const Saved = () => {
           <MovieCard
             {...item.movie}
             Action={
-              <AccentButton
-                iconOnly
-                fullWidth={false}
-                onPress={() => handleRemove(item.documentId)}
-                Icon={<Feather name="trash" size={20} color="#151312" />}
-                gradientColors={['#7C3AED', '#155dfc']}
-                className="w-20 mx-auto"
+              <RemoveSavedBtn
+                loadSaved={loadSaved}
+                documentId={item.documentId}
               />
             }
           />
