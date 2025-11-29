@@ -40,8 +40,8 @@ export const RemoveSavedBtn: FC<Props> = ({ documentId, loadSaved }) => {
       iconOnly
       fullWidth={false}
       onPress={() => handleRemove(documentId)}
-      Icon={<Feather name="trash" size={20} color="#151312" />}
-      gradientColors={['#7C3AED', '#155dfc']}
+      Icon={<Feather name="trash" size={20} color="white" />}
+      gradientColors={['#0a0a0a', '#052f4a']}
       className="w-20 mx-auto"
     />
   );

@@ -115,6 +115,7 @@ const MovieDetails = () => {
                   />
                 }
                 label={saving ? 'Saving...' : 'Save'}
+                gradientColors={['#0a0a0a', '#052f4a']}
               />
             </View>
           </View>
