@@ -1,14 +1,15 @@
 import { icons } from '@/constants/icons';
 import { Link } from 'expo-router';
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-const MovieCard: FC<Movie> = ({
+const MovieCard: FC<Movie & { Action?: ReactNode }> = ({
   id,
   poster_path,
   title,
   vote_average,
   release_date,
+  Action,
 }) => {
   return (
     <Link href={`/movies/${id}`} asChild>
@@ -40,6 +41,8 @@ const MovieCard: FC<Movie> = ({
             {release_date?.split('-')[0]}
           </Text>
         </View>
+
+        {Action ? <View className="mt-2">{Action}</View> : null}
       </TouchableOpacity>
     </Link>
   );
